@@ -60,17 +60,17 @@ function extractData(htmlContent, innerSelector) {
   const doc = parser.parseFromString(htmlContent, 'text/html');
 
   const elements = Array.from(doc.querySelectorAll(innerSelector));
-  const data = elements.map(el => "https://www.instagram.com/" + el.innerHTML.trim());
+  const data = elements.map(el => `https://www.instagram.com/${el.innerHTML.trim()}`);
 
   return data;
 }
 
 function createResultText(data) {
-  return data.join('\n');
+  return data.map(url => `<a href="${url}" target="_blank">${url}</a>`).join('\n');
 }
 
 function downloadResult(resultText, fileName) {
-  const blob = new Blob([resultText], { type: 'text/plain' });
+  const blob = new Blob([resultText], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
 
   const a = document.createElement('a');
