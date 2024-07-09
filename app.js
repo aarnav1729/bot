@@ -33,9 +33,9 @@ function handleFiles() {
       const notFollowingBack = followingData.filter(user => !followersData.includes(user));
       const notFollowingBackTxt = createResultText(notFollowingBack);
 
-      downloadResult(followersTxt, 'followers.txt');
-      downloadResult(followingTxt, 'following.txt');
-      downloadResult(notFollowingBackTxt, 'not_following_back.txt');
+      downloadResult(followersTxt, 'followers.html');
+      downloadResult(followingTxt, 'following.html');
+      downloadResult(notFollowingBackTxt, 'not_following_back.html');
     })
     .catch(error => {
       console.error("Error occurred while reading files or generating results:", error);
@@ -66,11 +66,25 @@ function extractData(htmlContent, innerSelector) {
 }
 
 function createResultText(data) {
-  return data.map(url => `<a href="${url}" target="_blank">${url}</a>`).join('\n');
+  return data.map(url => `<a href="${url}" target="_blank">${url}</a>`).join('<br>\n');
 }
 
 function downloadResult(resultText, fileName) {
-  const blob = new Blob([resultText], { type: 'text/html' });
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${fileName}</title>
+    </head>
+    <body>
+      ${resultText}
+    </body>
+    </html>
+  `;
+
+  const blob = new Blob([htmlContent], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
 
   const a = document.createElement('a');
