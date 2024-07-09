@@ -60,7 +60,7 @@ function extractData(htmlContent, innerSelector) {
   const doc = parser.parseFromString(htmlContent, 'text/html');
 
   const elements = Array.from(doc.querySelectorAll(innerSelector));
-  const data = elements.map(el => el.innerHTML.trim());
+  const data = elements.map(el => "https://www.instagram.com/" + el.innerHTML.trim());
 
   return data;
 }
