@@ -66,7 +66,7 @@ function extractData(htmlContent, innerSelector) {
 }
 
 function createStyledHtml(data, title) {
-  const linksHtml = data.map(url => `<a href="${url}" target="_blank" style="display: block; padding: 10px; text-decoration: none; color: #00376b;">${url}</a>`).join('');
+  const listItemsHtml = data.map((url, index) => `<li style="margin-bottom: 10px;"><a href="${url}" target="_blank" style="text-decoration: none; color: #00376b;">${index + 1}. ${url}</a></li>`).join('');
 
   return `
     <!DOCTYPE html>
@@ -102,15 +102,41 @@ function createStyledHtml(data, title) {
         .content {
           padding: 20px;
         }
+        #searchBar {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 20px;
+          border: 1px solid #dbdbdb;
+          border-radius: 3px;
+          font-size: 16px;
+        }
       </style>
     </head>
     <body>
       <div class="container">
         <div class="header">${title}</div>
         <div class="content">
-          ${linksHtml}
+          <input type="text" id="searchBar" placeholder="Search...">
+          <ul id="userList">
+            ${listItemsHtml}
+          </ul>
         </div>
       </div>
+      <script>
+        document.getElementById('searchBar').addEventListener('input', function() {
+          const filter = this.value.toLowerCase();
+          const listItems = document.getElementById('userList').getElementsByTagName('li');
+          for (let i = 0; i < listItems.length; i++) {
+            const a = listItems[i].getElementsByTagName('a')[0];
+            const textValue = a.textContent || a.innerText;
+            if (textValue.toLowerCase().indexOf(filter) > -1) {
+              listItems[i].style.display = "";
+            } else {
+              listItems[i].style.display = "none";
+            }
+          }
+        });
+      </script>
     </body>
     </html>
   `;
