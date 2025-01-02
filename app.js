@@ -36,8 +36,7 @@ function handleFiles() {
       const finalList = notFollowingBack.filter(user => !additionalData.includes(user));
 
       const notFollowingBackHtml = createStyledHtml(finalList, 'Not Following Back');
-
-      downloadResult(notFollowingBackHtml, 'not_following_back.html');
+      openInBrowser(notFollowingBackHtml);
     })
     .catch(error => {
       console.error("Error occurred while reading files or generating results:", error);
@@ -179,18 +178,9 @@ function createStyledHtml(data, title) {
   `;
 }
 
-function downloadResult(htmlContent, fileName) {
-  const blob = new Blob([htmlContent], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = fileName;
-  a.style.display = 'none';
-  document.body.appendChild(a);
-
-  a.click();
-
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+function openInBrowser(htmlContent) {
+  const newWindow = window.open();
+  newWindow.document.open();
+  newWindow.document.write(htmlContent);
+  newWindow.document.close();
 }
