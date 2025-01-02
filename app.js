@@ -150,6 +150,7 @@ function createStyledHtml(data, title) {
         </div>
       </div>
       <script>
+        // Status update and other event listeners remain the same
         function moveToBottom(checkbox) {
           const li = checkbox.parentElement;
           const ul = li.parentElement;
