@@ -69,7 +69,7 @@ function extractData(htmlContent, innerSelector) {
 function createStyledHtml(data, title) {
   const listItemsHtml = data.map(url => `
     <li style="margin-bottom: 10px; display: flex; align-items: center;">
-      <input type="checkbox" style="margin-right: 10px;" data-url="${url}" onclick="moveToBottom(this)">
+      <input type="checkbox" style="margin-right: 10px;" data-url="${url}" onclick="moveToBottom(this); updateStatusCards();">
       <a href="${url}" target="_blank" style="text-decoration: none; color: #00376b;">${url}</a>
     </li>
   `).join('');
@@ -116,11 +116,32 @@ function createStyledHtml(data, title) {
           border-radius: 3px;
           font-size: 16px;
         }
+        .status-cards {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 20px;
+        }
+        .status-card {
+          flex: 1;
+          margin: 0 10px;
+          padding: 10px;
+          background-color: #f5f5f5;
+          border: 1px solid #dbdbdb;
+          border-radius: 5px;
+          text-align: center;
+          font-size: 16px;
+          font-weight: bold;
+        }
       </style>
     </head>
-    <body onload="restoreCheckboxState()">
+    <body onload="restoreCheckboxState(); updateStatusCards();">
       <div class="container">
         <div class="header">${title}</div>
+        <div class="status-cards">
+          <div class="status-card" id="totalUsers">Total: 0</div>
+          <div class="status-card" id="checkedUsers">Checked: 0</div>
+          <div class="status-card" id="uncheckedUsers">Unchecked: 0</div>
+        </div>
         <div class="content">
           <input type="text" id="searchBar" placeholder="Search...">
           <ul id="userList">
@@ -157,6 +178,17 @@ function createStyledHtml(data, title) {
               moveToBottom(checkbox);
             }
           });
+        }
+
+        function updateStatusCards() {
+          const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+          const total = checkboxes.length;
+          const checked = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+          const unchecked = total - checked;
+
+          document.getElementById('totalUsers').innerText = `Total: ${total}`;
+          document.getElementById('checkedUsers').innerText = `Checked: ${checked}`;
+          document.getElementById('uncheckedUsers').innerText = `Unchecked: ${unchecked}`;
         }
 
         document.getElementById('searchBar').addEventListener('input', function() {
