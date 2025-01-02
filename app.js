@@ -61,12 +61,14 @@ function extractData(htmlContent, innerSelector) {
   const doc = parser.parseFromString(htmlContent, 'text/html');
 
   const elements = Array.from(doc.querySelectorAll(innerSelector));
+  // Make sure to use template literals (backticks) for the URL
   const data = elements.map(el => `https://www.instagram.com/${el.innerHTML.trim()}`);
 
   return data;
 }
 
 function createStyledHtml(data, title) {
+  // Use template literals for multi-line HTML strings
   const listItemsHtml = data.map(url => `
     <li style="margin-bottom: 10px; display: flex; align-items: center;">
       <input type="checkbox" style="margin-right: 10px;" data-url="${url}" onclick="moveToBottom(this); updateStatusCards();">
@@ -74,6 +76,7 @@ function createStyledHtml(data, title) {
     </li>
   `).join('');
 
+  // Return a single template literal that encapsulates all of the HTML
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -186,9 +189,10 @@ function createStyledHtml(data, title) {
           const checked = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
           const unchecked = total - checked;
 
-          document.getElementById('totalUsers').innerText = `Total: ${total}`;
-          document.getElementById('checkedUsers').innerText = `Checked: ${checked}`;
-          document.getElementById('uncheckedUsers').innerText = `Unchecked: ${unchecked}`;
+          // Make sure to wrap these strings in quotes or use template literals
+          document.getElementById('totalUsers').innerText = \`Total: \${total}\`;
+          document.getElementById('checkedUsers').innerText = \`Checked: \${checked}\`;
+          document.getElementById('uncheckedUsers').innerText = \`Unchecked: \${unchecked}\`;
         }
 
         document.getElementById('searchBar').addEventListener('input', function() {
